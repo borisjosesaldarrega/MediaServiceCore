@@ -75,11 +75,10 @@ public class OAuth2Service {
         if (tokenResult != null && tokenResult.getRefreshToken() != null) {
             return tokenResult;
         } else {
-            String msg = String.format("Error. Refresh token is empty!\nDebug data: device code: %s, client id: %s, client secret: %s\nError msg: %s",
-                    deviceCode,
-                    null, // mAppService.getClientId()
-                    null, // mAppService.getClientSecret()
-                    tokenResult != null ? tokenResult.getError() : "");
+            // Never write device codes, OAuth client material, access tokens or
+            // refresh tokens to logcat. They are credentials even when short-lived.
+            String msg = String.format("Authorization did not return a refresh token. OAuth error: %s",
+                    tokenResult != null ? tokenResult.getError() : "no_response");
 
             Log.e(TAG, msg);
             throw new IllegalStateException(msg);
